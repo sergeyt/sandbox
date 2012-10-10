@@ -1,10 +1,12 @@
-sandbox
-=======
+# sandbox
 
-Sandbox to practise git commands and markdown syntax.
+Sandbox to
 
-markdown cheat sheet
-====================
+- Practise git commands
+- Try out markdown syntax
+- Host misc small scripts
+
+## markdown cheat sheet
 
 ([source](http://warpedvisions.org/projects/markdown-cheat-sheet/))
 
