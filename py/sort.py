@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import sys
 import inspect
 
@@ -121,4 +123,4 @@ if __name__ == '__main__':
     merge_sort(seq[:])
     quick_sort(seq[:])
 
-# vim:set tw=80 cc=+1 et sts=4 sw=4:
+# vim:set tw=80 et sts=4 sw=4:

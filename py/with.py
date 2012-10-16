@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 class WithTest(object):
 
     def __init__(self):

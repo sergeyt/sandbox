@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 class NamingTest:
 
     def __private(self): pass
