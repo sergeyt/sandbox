@@ -34,10 +34,12 @@ class GraphNode(object):
         """Clear visited flag and reset distance"""
         self.visited = False
         self.distance = 0
+        self.time = 0
 
-    def visit(self, visit_fn, distance=0):
+    def visit(self, visit_fn, distance=0, time=0):
         self.visited = True
         self.distance = distance
+        self.time = time
         visit_fn(self)
 
 
@@ -80,7 +82,7 @@ class Graph(object):
         return out
 
     def bfs(self, node, visit_fn):
-        """Breath first search starts from node <node>.  Use a queue to store
+        """Breath first search starts from given node.  Use a queue to store
         to-visit nodes in order, in each round pop a node, visit it, visit its
         adjacent nodes, and add adjacent nodes to queue one by one, also update
         distance one by one
@@ -97,9 +99,28 @@ class Graph(object):
                     dest.visit(visit_fn, src.distance + 1)
                     q.append(dest)
 
-    def dfs(self, n, visit_fn):
-        """Depth first search starts fro nodes[n]"""
-        pass
+    def dfs(self, node, visit_fn):
+        """Depth first search starts from given node.  For given node and each
+        of its adjacent node, do depth first search recursively
+        """
+        assert isinstance(node, GraphNode)
+
+        # Make sure we start from the given node
+        seq = [node]
+        for x in self.nodes:
+            if x is not node:
+                seq.append(x)
+        # TODO: visit time
+        for src in seq:
+            self.__dfs_visit(src, visit_fn)
+
+    def __dfs_visit(self, node, visit_fn):
+        """Depth first one node recursively"""
+        if not node.visited:
+            node.visit(visit_fn)
+        for x in self.adjacent(node):
+            if not x.visited:
+                self.__dfs_visit(x, visit_fn)
 
 
 if __name__ == '__main__':
