@@ -35,6 +35,11 @@ class GraphNode(object):
         self.visited = False
         self.distance = 0
 
+    def visit(self, visit_fn, distance=0):
+        self.visited = True
+        self.distance = distance
+        visit_fn(self)
+
 
 class Graph(object):
     """A graph contains a list of grah nodes and a flag indicates whether it's a
@@ -84,13 +89,13 @@ class Graph(object):
         q = [node]
         while len(q) > 0:
             src = q.pop(0)
-            visit_fn(src)
+            if not src.visited:
+                src.visit(visit_fn)
+
             for dest in self.adjacent(src):
                 if not dest.visited:
-                    dest.distance = src.distance + 1
-                    visit_fn(dest)
+                    dest.visit(visit_fn, src.distance + 1)
                     q.append(dest)
-            src.visited = True
 
     def dfs(self, n, visit_fn):
         """Depth first search starts fro nodes[n]"""
@@ -133,11 +138,12 @@ if __name__ == '__main__':
         assert isinstance(node, GraphNode)
         print 'Visiting graph node %s, distance is %d' % (node, node.distance)
 
-    print 'BFS graph from node 0: (%s)' % graph[0]
+    print '\nBFS graph from node 0: (%s)' % graph[0]
     graph.clear_all()
+    # expect r, s, v, w, t, x, u, y
     graph.bfs(graph[0], visit_node)
 
-    print 'DFS graph from node 0: (%s)' % graph[0]
+    print '\nDFS graph from node 0: (%s)' % graph[0]
     graph.clear_all()
     graph.dfs(graph[0], visit_node)
 
