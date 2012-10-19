@@ -15,7 +15,7 @@ class Vertex(object):
 
 class GraphNode(object):
     """A graph node contains a Vertex instance and all its adjacent edges, an
-    edge is expressed by a Vertex instance
+    edge is expressed by its ending Vertex instance
     """
 
     def __init__(self, vertex, edges=None):
@@ -25,21 +25,21 @@ class GraphNode(object):
             self.edges = edges
         else:
             self.edges = []
-        self.__visited = False
+        self.clear()
 
     def __repr__(self):
         return '%s -> %s' % (self.vertex, self.edges)
 
-    def visited(self):
-        return self.__visited
-
     def clear(self):
-        """Clear visited flag"""
-        self.__visited = False
+        """Clear visited flag and reset distance"""
+        self.visited = False
+        self.distance = 0
 
 
 class Graph(object):
-    """A graph contains a set of grah nodes"""
+    """A graph contains a list of grah nodes and a flag indicates whether it's a
+    directed graph (digraph)
+    """
 
     def __init__(self, digraph=False):
         self.digraph = digraph
@@ -52,6 +52,9 @@ class Graph(object):
         for x in self.nodes:
             yield x
 
+    def __getitem__(self, n):
+        return self.nodes[n]
+
     def add_node(self, node):
         """Add a GraphNode instance"""
         assert isinstance(node, GraphNode)
@@ -62,11 +65,34 @@ class Graph(object):
         for node in self.nodes:
             node.clear()
 
-    def bfs(self, n):
-        """Breath first search starts fro nodes[n]"""
-        pass
+    def adjacent(self, node):
+        """Return a list of adjacent graph nodes (GraphNode) of given node"""
+        out = []
+        for v in node.edges:
+            for x in self.nodes:
+                if x.vertex == v:
+                    out.append(x)
+        return out
 
-    def dfs(self, n):
+    def bfs(self, node, visit_fn):
+        """Breath first search starts from node <node>.  Use a queue to store
+        to-visit nodes in order, in each round pop a node, visit it, visit its
+        adjacent nodes, and add adjacent nodes to queue one by one, also update
+        distance one by one
+        """
+        assert isinstance(node, GraphNode)
+        q = [node]
+        while len(q) > 0:
+            src = q.pop(0)
+            visit_fn(src)
+            for dest in self.adjacent(src):
+                if not dest.visited:
+                    dest.distance = src.distance + 1
+                    visit_fn(dest)
+                    q.append(dest)
+            src.visited = True
+
+    def dfs(self, n, visit_fn):
         """Depth first search starts fro nodes[n]"""
         pass
 
@@ -103,12 +129,16 @@ if __name__ == '__main__':
     for n in graph:
         print n
 
-    print 'BFS graph from node 0: (%s)' % graph.nodes[0]
-    graph.clear_all()
-    print graph.bfs(0)
+    def visit_node(node):
+        assert isinstance(node, GraphNode)
+        print 'Visiting graph node %s, distance is %d' % (node, node.distance)
 
-    print 'DFS graph from node 0: (%s)' % graph.nodes[0]
+    print 'BFS graph from node 0: (%s)' % graph[0]
     graph.clear_all()
-    print graph.dfs(0)
+    graph.bfs(graph[0], visit_node)
+
+    print 'DFS graph from node 0: (%s)' % graph[0]
+    graph.clear_all()
+    graph.dfs(graph[0], visit_node)
 
 # EOF
