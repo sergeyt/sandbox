@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 def make_counter():
     count = 0
@@ -9,8 +9,9 @@ def make_counter():
     return counter
 
 if __name__ == '__main__':
-    print make_counter()
-    print make_counter()
-    print make_counter()
+    mc = make_counter()
+    print(mc())
+    print(mc())
+    print(mc())
 
 # EOF

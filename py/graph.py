@@ -111,19 +111,22 @@ class Graph(object):
             if x is not node:
                 seq.append(x)
 
-        # visit time, valid in this function scope
-        time = -1
-
-        def _dfs_visit(node, visit_fn):
+        # Record visit time (sequence no.) when access each node.  We can define
+        # a 'time = -1' and use 'nonlocal time' in _dfs_visit() but that won't
+        # work with python 2.x, we here we use a tricky tip: when function
+        # default arg is a list, the variable will become a static one.  We use
+        # list 'time' for that purpose and only use time[0] to record the
+        # sequence no.
+        #
+        def _dfs_visit(node, visit_fn, time=[-1]):
             """Depth first one node recursively"""
-            nonlocal time
+            # XXX: nonlocal time
             if not node.visited:
-                time += 1
-                node.visit(visit_fn, time=time)
+                time[0] = time[0] + 1
+                node.visit(visit_fn, time=time[0])
             for x in self.adjacent(node):
                 if not x.visited:
-                    time += 1
-                    _dfs_visit(x, visit_fn, time=time)
+                    _dfs_visit(x, visit_fn)
 
         for src in seq:
             _dfs_visit(src, visit_fn)
@@ -171,11 +174,12 @@ if __name__ == '__main__':
 
     print '\nBFS graph from node 0: (%s)' % graph[0]
     graph.clear_all()
-    # expect r, s, v, w, t, x, u, y
+    # Expect r, s, v, w, t, x, u, y
     graph.bfs(graph[0], visit_node_with_distance)
 
     print '\nDFS graph from node 0: (%s)' % graph[0]
     graph.clear_all()
+    # Expect r, s, w, t, u, x, y, v
     graph.dfs(graph[0], visit_node_with_time)
 
 # EOF
