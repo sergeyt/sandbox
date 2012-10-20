@@ -110,17 +110,23 @@ class Graph(object):
         for x in self.nodes:
             if x is not node:
                 seq.append(x)
-        # TODO: visit time
-        for src in seq:
-            self.__dfs_visit(src, visit_fn)
 
-    def __dfs_visit(self, node, visit_fn):
-        """Depth first one node recursively"""
-        if not node.visited:
-            node.visit(visit_fn)
-        for x in self.adjacent(node):
-            if not x.visited:
-                self.__dfs_visit(x, visit_fn)
+        # visit time, valid in this function scope
+        time = -1
+
+        def _dfs_visit(node, visit_fn):
+            """Depth first one node recursively"""
+            nonlocal time
+            if not node.visited:
+                time += 1
+                node.visit(visit_fn, time=time)
+            for x in self.adjacent(node):
+                if not x.visited:
+                    time += 1
+                    _dfs_visit(x, visit_fn, time=time)
+
+        for src in seq:
+            _dfs_visit(src, visit_fn)
 
 
 if __name__ == '__main__':
@@ -155,17 +161,21 @@ if __name__ == '__main__':
     for n in graph:
         print n
 
-    def visit_node(node):
+    def visit_node_with_distance(node):
         assert isinstance(node, GraphNode)
         print 'Visiting graph node %s, distance is %d' % (node, node.distance)
+
+    def visit_node_with_time(node):
+        assert isinstance(node, GraphNode)
+        print 'Visiting graph node %s, time is %d' % (node, node.time)
 
     print '\nBFS graph from node 0: (%s)' % graph[0]
     graph.clear_all()
     # expect r, s, v, w, t, x, u, y
-    graph.bfs(graph[0], visit_node)
+    graph.bfs(graph[0], visit_node_with_distance)
 
     print '\nDFS graph from node 0: (%s)' % graph[0]
     graph.clear_all()
-    graph.dfs(graph[0], visit_node)
+    graph.dfs(graph[0], visit_node_with_time)
 
 # EOF
