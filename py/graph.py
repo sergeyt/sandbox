@@ -31,7 +31,7 @@ class GraphNode(object):
         return '%s -> %s' % (self.vertex, self.edges)
 
     def clear(self):
-        """Clear visited flag and reset distance"""
+        """Clear visited flag, reset distance and access time"""
         self.visited = False
         self.distance = 0
         self.time = 0
@@ -77,8 +77,9 @@ class Graph(object):
         out = []
         for v in node.edges:
             for x in self.nodes:
-                if x.vertex == v:
+                if x.vertex is v:
                     out.append(x)
+                    break
         return out
 
     def bfs(self, node, visit_fn):
@@ -105,7 +106,7 @@ class Graph(object):
         """
         assert isinstance(node, GraphNode)
 
-        # Make sure we start from the given node
+        # Reorder all nodes, to start from the given node
         seq = [node]
         for x in self.nodes:
             if x is not node:
@@ -113,10 +114,9 @@ class Graph(object):
 
         # Record visit time (sequence no.) when access each node.  We can define
         # a 'time = -1' and use 'nonlocal time' in _dfs_visit() but that won't
-        # work with python 2.x, we here we use a tricky tip: when function
-        # default arg is a list, the variable will become a static one.  We use
-        # list 'time' for that purpose and only use time[0] to record the
-        # sequence no.
+        # work with python 2.x, here we use a tricky solution: when function
+        # default arg is a list, the variable is static.  We use list 'time' for
+        # that purpose and use time[0] to record the sequence no.
         #
         def _dfs_visit(node, visit_fn, time=[-1]):
             """Depth first one node recursively"""
