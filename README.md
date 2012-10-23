@@ -6,6 +6,48 @@ Sandbox to
 - Try out markdown syntax
 - Host misc small scripts
 
+## Work with git remote branches
+
+### Creating a Remote Branch
+
+1. Create the remote branch
+
+    git push origin origin:refs/heads/new_feature_name
+
+2. Make sure everything is up-to-date
+
+    git fetch origin
+
+3. Then you can see that the branch is created.
+
+    git branch -r
+
+4. Start tracking the new branch
+
+    git checkout --track -b new_feature_name origin/new_feature_name
+
+5. Make sure everything is up-to-date
+
+    git pull
+
+### Cleaning up Mistakes
+
+If you make a mistake you can always delete the remote branch
+
+    git push origin :heads/new_feature_name
+
+### Use the Branch from Another Location
+
+When you get to another computer or clone the git repository to a new computer, then you just need to start tracking the new branch again.
+
+    git branch -r
+
+to show all the remote branches
+
+    git checkout --track -b new_branch origin/new_feature_name
+
+to start tracking the new branch
+
 ## markdown cheat sheet
 
 ([source](http://warpedvisions.org/projects/markdown-cheat-sheet/))
