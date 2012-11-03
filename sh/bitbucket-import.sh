@@ -9,7 +9,6 @@ git init
 git remote add origin ssh://git@bitbucket.org/ymattw/$WS
 git add .
 git ci -m 'initial import'
-git push
 git push -u origin master
 
 # EOF

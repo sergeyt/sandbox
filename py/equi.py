@@ -12,7 +12,7 @@ def equi(A):
         sum_index.append(sum_index[i] + A[i])
     sum_index.append(0)
 
-    for i in xrange(0, len(A)):
+    for i in xrange(len(A)):
         if sum_index[i] == sum_index[-2] - A[i] - sum_index[i]:
             return i
     return -1
