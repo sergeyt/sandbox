@@ -46,7 +46,7 @@ to show all the remote branches
 
     git checkout --track -b new_branch origin/new_feature_name
 
-to start tracking the new branch
+to start tracking the new branch.
 
 ## markdown cheat sheet
 
